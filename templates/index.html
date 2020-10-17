@@ -36,10 +36,7 @@
 </div>
 
 
-<!--Modal-->	 
-	<!--Step 1:Adding HTML-->
-	<!--<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Sign In</button>-->
-	
+<!--Modal-->	 	
 	<div id="id01" class="modal">
 		<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
 		<form class="modal-content animate" action="./admin.html">
@@ -57,25 +54,24 @@
 			</div>
 		</form>
 	</div>
-	
-	<!--close the modal by just clicking outside of the modal-->
-	<script>
-		var modal = document.getElementById('id01');
-	
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = "none";
-			}
-		}
-	</script>
 
 
 <div class="content">
-
 	<div class="charts">
 		<div class="canvas">
-			<h4 style="text-align: center;">Suicidal Vs Non-Suicidal Tweet Count</h4>
-			<canvas id="piechart"></canvas>
+			<div class="inner-canvas">
+				<div class="ch1">
+					<h6 style="text-align: left;">Suicidal Vs Non-Suicidal Tweet Count</h6>
+					<canvas id="piechart"></canvas>
+					<h6 style="text-align: left;">Tweets per Category</h6>
+					<canvas id="barchart"></canvas>
+				</div>
+				<div class="ch2">
+					<h6 style="text-align: center;">Suicidal Intent Over Time</h6>
+					<canvas id="linechart"></canvas>
+					<canvas id="linechart1"></canvas>
+				</div>
+			</div>
 		</div>
 		<div id="map"></div>
 	</div>
