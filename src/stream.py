@@ -1,20 +1,41 @@
 # fetch tweets from twitter
 import re
 import pandas as pd
+import json
 import tweepy
 from tweepy import StreamListener, Stream, Cursor
 import config
 
 class MyStreamListener(StreamListener):
     def on_status(self, status):
-        with open('test.csv', 'a') as db:
-            db.write(status.text)
+        with open('tweets.json', 'a') as db:
+            db = {'tweet': status.text, 'user': status.user.name}
+            json.dumps(db, ensure_ascii=False, indent=2)
         return True
 
     def on_error(self, status_code):
         if status_code == 420:
             return False # disconnect the stream
 
+def stream_data():
+    """Stream tweets from twitter."""
+    
+    consumerKey = config.CONSUMER_KEY
+    consumerSecret = config.CONSUMER_SECRET
+    accessToken = config.ACCESS_TOKEN
+    accessTokenSecret = config.ACCESS_TOKEN_SECRET
+
+    # authentication
+    auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
+    # set access token
+    auth.set_access_token(accessToken, accessTokenSecret)
+    # create the api object
+    api = tweepy.API(auth, wait_on_rate_limit=True)
+
+    _listener = MyStreamListener()
+    my_stream = Stream(auth=api.auth, listener=_listener)
+    rules = ['suicide', 'commit suicide', 'suicidal']
+    my_stream.filter(track=rules)
 
 def get_twitter_data():
     """Fetch tweets from twitter."""
@@ -34,7 +55,6 @@ def get_twitter_data():
     _listener = MyStreamListener()
     my_stream = Stream(auth=api.auth, listener=_listener)
     rules = ['suicide', 'commit suicide', 'suicidal']
-    #my_stream.filter(track=rules)
 
     Count = 10
     public_tweets = Cursor(api.search, rules, lang="en").items(Count)
@@ -49,4 +69,12 @@ def get_twitter_data():
         cleaning_tweet = single_chars.sub('', cleaning_tweet)
         data.append(cleaning_tweet)
     data = pd.DataFrame(data)
-    return data
+    return public_tweets
+
+if __name__=="__main__":
+    public_tweets = get_twitter_data()
+    stream_data()
+
+    '''print({"user": public_tweets.user.name,
+    "tweet": public_tweets.tweet,
+    "time": public_tweets.created_at})'''
