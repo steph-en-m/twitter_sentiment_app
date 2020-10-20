@@ -1,0 +1,105 @@
+<!Doctype html>
+<html>
+<head>
+	<title>Suicide Monitor</title>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<link href="../static/bootstrap.min.css" rel="stylesheet">
+	<link href="../static/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="head">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">Suicide Monitor</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+	  
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		  <ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+			  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+			</li>
+			<!--<li class="nav-item">
+			  <a class="nav-link" href="#">About</a>
+			</li>-->
+			<li>
+				<button class="btn btn-outline-success my-2 my-sm-0" onclick="document.getElementById('id01').style.display='block'" style="width:auto; border: None; color: white;">Add Rules</button>
+			</li>
+		  </ul>
+		  <form class="form-inline my-2 my-lg-0">
+			<input class="form-control mr-sm-2" type="search" placeholder="Tweet keyword search" aria-label="Search">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+		  </form>
+		</div>
+	  </nav>
+</div>
+
+
+<!--Modal-->	 	
+	<div id="id01" class="modal">
+		<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+		<form class="modal-content animate" action="./admin.html">
+			<div class="container">
+				<label><b>Email</b></label>
+				<input type="text" placeholder="Email Address" name="email" required>
+	
+				<label><b>Password</b></label>
+				<input type="password" placeholder="Password" name="psw" required>
+	
+				<div class="clearfix">
+					<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="document.getElementById('id01').style.display='none'">Close</button>
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit" href="./admin.html">Sign In</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+
+<div class="content">
+	<div class="charts">
+		<div class="canvas">
+			<div class="inner-canvas">
+				<div class="ch1">
+					<h6 style="text-align: left;">Suicidal Vs Non-Suicidal Tweet Count</h6>
+					<canvas id="piechart"></canvas>
+					<h6 style="text-align: left;">Tweets per Category</h6>
+					<canvas id="barchart"></canvas>
+				</div>
+				<div class="ch2">
+					<h6 style="text-align: center;">Suicidal Intent Over Time</h6>
+					<canvas id="linechart"></canvas>
+					<canvas id="linechart1"></canvas>
+				</div>
+			</div>
+		</div>
+		<div id="map"></div>
+	</div>
+</div>
+<hr style="color: #fff;">
+<div class="overflow-auto">
+	<div class="card">	
+		<div class="card-body">
+			<em style="color: blue;">@Me</em><br/>
+			<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+			<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+		</div>
+	  </div>
+	
+	  <div class="card">
+		<div class="card-body">
+			<em style="color: blue;">@some_guy</em><br/>
+			<em style="font-size: 14px;">Where do people get the guts to commit suicide.</em><br/>
+			<p style="font-size: 13px">PREDICTED INTENT: NOT SUICIDAL</p>
+		</div>
+	  </div>
+</div>
+
+<!--Scripts-->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script type="text/javascript" src="../static/script.js"></script>
+
+</body>
+</html>
