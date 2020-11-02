@@ -115,6 +115,7 @@ p{
   overflow: hidden;
 }
 .charts #map{
+  overflow: scroll;
   width: 45%;
   height: 420px;
   float: left;
@@ -143,4 +144,8 @@ p{
   border: solid #fefefe;
   border-radius: 7px;
   box-shadow: 5px 0 0 0 rgba(247, 247, 247, 0.3);
+}
+
+.overflow-auto {
+  overflow: scroll;
 }

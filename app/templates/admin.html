@@ -2,21 +2,24 @@
 <html>
 <head>
 	<title>Suicide Monitor</title>
-  <link href="../static/bootstrap.min.css" rel="stylesheet">
-  <link href="../static/admin.css" rel="stylesheet">
+  <!--<link href="{{ url_for('static', filename='bootstrap.min.css')}}" />
+  <link href="{{ url_for('static', filename='styles.css')}}" />-->
+  <link href="/static/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/styles.css" rel="stylesheet">
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
 </head>
 <body>
 
+<form action='/app/admin_dashboard/search/' method="POST">
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="./index.html">Suicide Monitor</a>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Tweet Keyword Search" aria-label="Search">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/app/home/">Suicide Monitor</a>
+    <input class="form-control form-control-dark w-100" type="text" name="search" placeholder="Tweet Keyword Search" aria-label="Search">
     <ul class="navbar-nav px-3">
       <li class="nav-item text-nowrap">
-        <a class="nav-link" href="./index.html">Sign-Out</a>
+        <a class="nav-link" href="/app/home/">Sign-Out</a>
       </li>
     </ul>
-  </nav>
+  </nav></form>
   
   <div class="container-fluid">
     <div class="row">
@@ -58,16 +61,36 @@
 
         <div class="charts">
           <div class="canvas">
-            <h5 style="text-align: center;">Suicidal Vs Non-Suicidal Tweet Count</h5>
-            <canvas id="piechart"></canvas>
+            <div class="inner-canvas">
+              <div class="ch1">
+                <h6 style="text-align: left;">Suicidal Vs Non-Suicidal Tweet Count</h6>
+                <canvas id="piechart"></canvas>
+                <h6 style="text-align: left;">Tweets per Category</h6>
+                <canvas id="barchart"></canvas>
+              </div>
+              <div class="ch2">
+                <h6 style="text-align: center;">Suicidal Intent Over Time</h6>
+                <canvas id="linechart"></canvas>
+                <canvas id="linechart1"></canvas>
+              </div>
+            </div>
           </div>
-          <div id="map"></div>
-        </div><br/>
-
-        {% for keyword in keywords %}
-          <p>{{keyword.keyword}}</p>
-        {%endfor%}
-        
+          <div id="map">
+            <div class="card">
+              <div class="card-body">
+                <em style="color: blue;">@Me</em><br/>
+                <em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+                <p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+              </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <em style="color: blue;">@Me</em><br/>
+                  <em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+                  <p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+                </div>
+                </div>          
+          </div><br/>
 
         <div id="rules">
         <h2>Rules Table:</h2>
@@ -82,30 +105,34 @@
             <tbody>
               {% for keyword in keywords %}
               <tr>
-                <td>{{keyword.serialize().id}}</td>
-                <td>{{keyword.serialize().keyword}}</td>
+                <td>{{keyword["id"]}}</td>
+                <td>{{keyword["Keyword"]}}</td>
               </tr>
               {% endfor %}
-              <!--
-              <tr>
-                <td>2</td>
-                <td>Suicidal</td>
-              </tr>-->
             </tbody>
           </table>
         </div>
         </div>
-
         
-          <form action="/admin_dashboard" method="POST">
+          <form action="/app/admin_dashboard/add/" method="POST">
             <div class="input-group mb-3"></div>
+              {% with messages = get_flashed_messages() %}
+              {% if messages %}
+              <p style="color: red; font-weight: 100;">{{ messages[0] }}</p>
+              {% endif %}
+              {% endwith %}
               <input type="text" id="add-rule" name="add-rule" class="form-control" placeholder="Add new Keyword Search Term" aria-label="Recipient's username" aria-describedby="button-addon2">
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit" id="add-rule">Save</button>
-                <p>{{message}}</p>
-              </div>
+                <button class="btn btn-outline-secondary" type="submit" id="add-rule">Save</button><br/>
+              </div></form>
+              
+              <div class="delete">
+                <form action="/app/admin_dashboard/delete/" method="POST">
+                  <input type="text" name="delete-rule" class="form-control" placeholder="Delete Keyword" aria-label="Recipient's username" aria-describedby="button-addon2">
+                  <button class="btn btn-outline-secondary" type="submit">Delete Keyword</button>
+                </form>
+             </div>
             </div>
-          </form>
 
       </main>
     </div>
@@ -115,7 +142,8 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-  <script type="text/javascript" src="../static/script.js"></script>
+  <script type="text/javascript" src="/static/script.js"></script>
+  <!--<script type="text/javascript" src="{{ url_for('static', filename='script.js')}}"></script>-->
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 body {
     font-size: .875rem;
+    margin-top: auto;
   }
   
   .feather {
@@ -11,23 +12,6 @@ body {
   /*
    * Sidebar
    */
-
-/* Charts */
-.charts {
-  overflow: hidden;
-}
-
-.charts #map{
-  width: 50%;
-  height: 400px;
-  float: left;
-}
-
-.charts .canvas{
-  width: 50%;
-  height: 200px;
-  float: left;
-}
 
 .sidebar {
 position: fixed;
@@ -124,4 +108,52 @@ box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 .form-control-dark:focus {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
+/* Charts */
+/*Chart and map styles*/
+.charts {
+  overflow: hidden;
+}
+.charts #map{
+  width: 45%;
+  height: 400px;
+  float: left;
+}
+
+.canvas .inner-canvas .ch1 {
+  width: 28%;
+  height: 400px;
+  float: left;
+  align-content: center;
+}
+
+.canvas .inner-canvas .ch2{
+  width: 27%;
+  height: 400px;
+  float: left;
+  align-content: center;
+}
+
+.canvas .inner-canvas .ch1 {
+  border: solid #fefefe;
+  border-radius: 5px;
+  box-shadow: 0 0 0 5px rgba(228, 224, 224, 0.3);
+}
+.canvas .inner-canvas .ch2 {
+  border: solid #fefefe;
+  border-radius: 5px;
+  box-shadow: 5px 0 0 0 rgba(247, 247, 247, 0.3);
+}
+
+/* Tweet card*/
+.card {
+  border-bottom: solid rgb(228, 226, 226);
+  height: 150px;
+  box-shadow: #fefefe;
+  border-radius: 5px;
+}
+
+p{
+  color: #2EBC99;
 }

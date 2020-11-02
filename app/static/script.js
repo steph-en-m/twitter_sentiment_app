@@ -5,11 +5,11 @@ var modal = document.getElementById('id01');
 	
 window.onclick = function(event) {
 	if (event.target == modal) {
-		modal.style.display = "none";
+		modal.style.display = 1; //"none";
 	}
 }
 
-// Map
+/*/ Map
 _map = document.getElementById('map')
 var map = L.map(_map).setView([51.505, -0.09], 4);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>contributors',
@@ -18,6 +18,7 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution: '&copy; <a 
 L.marker([51.5, -0.09]).addTo(map)
 					   .bindPopup('Tweet: some tweet.<br> Suicidal probability: 0.67.')
 					   .openPopup();
+*/
 
 // Doughnut chart
 var ctx = document.getElementById("piechart").getContext("2d");

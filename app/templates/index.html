@@ -3,8 +3,8 @@
 <head>
 	<title>Suicide Monitor</title>
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-	<link href="../static/bootstrap.min.css" rel="stylesheet">
-	<link href="../static/styles.css" rel="stylesheet">
+	<link href="/static/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/styles.css" rel="stylesheet">
 </head>
 <body>
 
@@ -27,29 +27,33 @@
 				<button class="btn btn-outline-success my-2 my-sm-0" onclick="document.getElementById('id01').style.display='block'" style="width:auto; border: None; color: white;">Add Rules</button>
 			</li>
 		  </ul>
-		  <form class="form-inline my-2 my-lg-0">
-			<input class="form-control mr-sm-2" type="search" placeholder="Tweet keyword search" aria-label="Search">
+		  <form class="form-inline my-2 my-lg-0" action='/app/home/search/' method="POST">
+			<input class="form-control mr-sm-2" type="search" name="search" placeholder="Tweet keyword search" aria-label="Search">
 			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 		  </form>
 		</div>
 	  </nav>
 </div>
 
-
 <!--Modal-->	 	
 	<div id="id01" class="modal">
 		<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
-		<form class="modal-content animate" action="./admin.html">
+		<form class="modal-content animate" action="/app/home/login/" method="POST">
 			<div class="container">
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<p style="color: red; font-weight: 100;">{{ messages[0] }}</p>
+				{% endif %}
+				{% endwith %}
 				<label><b>Email</b></label>
 				<input type="text" placeholder="Email Address" name="email" required>
 	
 				<label><b>Password</b></label>
-				<input type="password" placeholder="Password" name="psw" required>
+				<input type="password" placeholder="Password" name="password" required>
 	
 				<div class="clearfix">
 					<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="document.getElementById('id01').style.display='none'">Close</button>
-					<button class="btn btn-outline-success my-2 my-sm-0" type="submit" href="./admin.html">Sign In</button>
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign In</button>
 				</div>
 			</div>
 		</form>
@@ -73,12 +77,64 @@
 				</div>
 			</div>
 		</div>
-		<div id="map"></div>
+		<div id="map">
+			<div class="overflow-auto">
+				<div class="card">
+					<div class="card-body">
+						<em style="color: blue;">@Me</em><br/>
+						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+					</div>
+				  </div>
+				  <div class="card">
+					<div class="card-body">
+						<em style="color: blue;">@Me</em><br/>
+						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+					</div>
+				  </div>
+				  <div class="card">
+					<div class="card-body">
+						<em style="color: blue;">@Me</em><br/>
+						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+					</div>
+				  </div>
+				  <div class="card">
+					<div class="card-body">
+						<em style="color: blue;">@Me</em><br/>
+						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+					</div>
+				  </div>
+				  <div class="card">
+					<div class="card-body">
+						<em style="color: blue;">@Me</em><br/>
+						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+					</div>
+				  </div>
+				  <div class="card">
+					<div class="card-body">
+						<em style="color: blue;">@Me</em><br/>
+						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+					</div>
+				  </div>
+				  <div class="card">
+					<div class="card-body">
+						<em style="color: blue;">@Me</em><br/>
+						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
+						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+					</div>
+				  </div>
+			</div>
+		</div>
 	</div>
 </div>
 <hr style="color: #fff;">
 <div class="overflow-auto">
-	<div class="card">	
+	<div class="card">
 		<div class="card-body">
 			<em style="color: blue;">@Me</em><br/>
 			<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
@@ -99,7 +155,7 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-<script type="text/javascript" src="../static/script.js"></script>
+<script type="text/javascript" src="/static/script.js"></script>
 
 </body>
 </html>
