@@ -69,12 +69,4 @@ def get_twitter_data():
         cleaning_tweet = single_chars.sub('', cleaning_tweet)
         data.append(cleaning_tweet)
     data = pd.DataFrame(data)
-    return public_tweets
-
-if __name__=="__main__":
-    public_tweets = get_twitter_data()
-    stream_data()
-
-    '''print({"user": public_tweets.user.name,
-    "tweet": public_tweets.tweet,
-    "time": public_tweets.created_at})'''
+    return data

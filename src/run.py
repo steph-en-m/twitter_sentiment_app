@@ -69,6 +69,8 @@ def train_lstm():
     print(f"Mean accuracy over 5 folds: {np.round(np.mean(np.array(acc)), 3)}")
     print(f"Mean f1_score over 5 folds: {np.round(np.mean(f1_scores), 3)}")
 
+    return model, tokenizer
+
 
 def train_ensemble(model, features, target):
     """Train suicide prediction model."""
@@ -88,16 +90,16 @@ def train_ensemble(model, features, target):
         print(f'Fold_{i}_f1_score: {f1}')
         f1_scores.append(f1)
     print(f'Mean_F1_score_xgboost: {np.mean(f1_scores)}')
-    pickle.dump(model, open('./saved_models/model.pkl', 'wb'))
+    model.save_model('./saved_models/model.bin')
 
 
-def predict_on_test(model, _type='tree'):
+def predict_on_test(model, _tokenizer, _type='tree'):
     """Predict on extracted tweets"""
-    test_data = scraper.get_twitter_data()
+    test_data = stream.get_twitter_data()
     test_data = np.array(test_data)
     if _type == 'lstm':
         for i, c in enumerate(test_data, 1):
-            test_tokenized = tokenizer.texts_to_sequences(str(c))
+            test_tokenized = _tokenizer.texts_to_sequences(str(c))
             test_tokenized = sequence.pad_sequences(test_tokenized, maxlen=config.MAX_SEQ_LEN, dtype='float64')
             print(f"Tweet: {str(c[0])}:\n Suicidal_Probability: {np.mean(model.predict(test_tokenized))}")
     else:
@@ -109,6 +111,6 @@ def predict_on_test(model, _type='tree'):
 
 if __name__=='__main__':
     xgb_model = Model.build_ensemble()
-    #train_lstm()
+    #lstm_model, tokenizer = train_lstm()
     train_ensemble(xgb_model, train_vectors, target)
-    predict_on_test(xgb_model)
+    #predict_on_test(lstm_model, tokenizer, _type='lstm')
