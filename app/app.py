@@ -1,9 +1,15 @@
 import os
+import re
+import json
 import pickle
 import tweepy
 from flask import Flask, request, jsonify, render_template, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from tweepy import StreamListener, Stream, Cursor
+from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
+import numpy as np
+import xgboost as xgb
 import config
 
 app = Flask(__name__)
@@ -32,9 +38,95 @@ class MyStreamListener(StreamListener):
         if status_code == 420:
             return False # disconnect the stream
 
+def fetch_tweets():
+    """Fetch tweets from twitter."""
+    consumerKey = config.CONSUMER_KEY
+    consumerSecret = config.CONSUMER_SECRET
+    accessToken = config.ACCESS_TOKEN
+    accessTokenSecret = config.ACCESS_TOKEN_SECRET
+
+    auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
+    auth.set_access_token(accessToken, accessTokenSecret)
+
+    api = tweepy.API(auth, wait_on_rate_limit=True)
+
+    rules = models.Keywords.query.all()
+    rules = [word.serialize(_id=False)["Keyword"] for word in rules]
+    #rules = ["".join(r for r in rule)]
+    print(f"Rules: {rules}")
+    n_tweets = 80
+    public_tweets = Cursor(api.search, rules[:2], lang="en").items(n_tweets)
+    unwanted_words = ['@', 'RT', ':', 'https', 'http']
+    symbols = ['@', '#']
+    single_chars = re.compile(r'\s+[a-zA-Z]\s+')
+    data = []
+    users = []
+    for tweet in public_tweets:
+        text = tweet.text
+        usr = tweet.user.screen_name
+        users.append(usr)
+        textWords = text.split()
+        cleaning_tweet = ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|(RT)", " ", text).split())
+        cleaning_tweet = single_chars.sub('', cleaning_tweet)
+        data.append(cleaning_tweet)
+    data = pd.DataFrame(data)
+    #print(f"Users: {users}")
+
+    test_data = np.array(data)
+    vectorizer = CountVectorizer(analyzer='word', ngram_range=(1,3))
+    vectorizer = pickle.load(open('./saved_models/vectorizer.pkl', 'rb'))
+    results = []
+    ct = 0
+    for i, c in enumerate(test_data, 1):
+        str_to_vec = vectorizer.transform(c)
+        model = xgb.XGBClassifier(nthread=2)
+        model.load_model("./saved_models/model.bin")
+        usr_ = users[ct]
+        ct += 1
+        pred = model.predict_proba(str_to_vec)[:,1]
+        intent_ = ""
+        if pred[0] <= 0.4:
+            intent_ = "Not Suicidal"
+        elif pred[0] > 0.4 and pred[0] <= 0.6:
+            intent_ = "Neutral"
+        else:
+            intent_ = "Suicidal"
+        result = {
+            'User': '@'+usr_,
+            'Tweet': str(c[0]),
+            'Prediction': intent_
+                 }
+        results.append(result)
+        # add tweet and meta to the db
+        tweet_ = models.Tweets(
+                               tweet=str(c[0]),
+                               user='@'+usr_,
+                               intent=intent_
+                               )
+        db.session.add(tweet_)
+        db.session.commit()
+
+    suicidal_tweet_count = 0
+    nonsuicidal_tweet_count = 0
+    neutral_tweet_count = 0
+    for t in results:
+        if t["Prediction"] == "Suicidal":
+            suicidal_tweet_count += 1
+        elif t["Prediction"] == "Not Suicidal":
+            nonsuicidal_tweet_count += 1
+        else:
+            neutral_tweet_count += 1
+    counts = []
+    counts.append(suicidal_tweet_count)
+    counts.append(nonsuicidal_tweet_count)
+    counts.append(neutral_tweet_count)
+    counts_dict = {"counts": counts}
+
+    return results, counts_dict
+    
+
 def stream_data():
     """Stream tweets from twitter."""
-    
     consumerKey = config.CONSUMER_KEY
     consumerSecret = config.CONSUMER_SECRET
     accessToken = config.ACCESS_TOKEN
@@ -54,7 +146,13 @@ def stream_data():
 @app.route("/app/home/")
 def index():
     """Suicide monitor homepage."""
-    return render_template("index.html")
+    results, counts_dict = fetch_tweets()
+    
+    #counts_dict = {"counts": counts}
+    return render_template("index.html",
+                            tweets=results,
+                            counts=counts_dict
+                           )
 
 @app.route("/app/home/login/", methods=["POST"])
 def login():
@@ -73,13 +171,7 @@ def login():
 @app.route("/app/home/search/", methods=["POST"])
 @app.route("/app/admin_dashboard/search/", methods=["POST"])
 def search_tweets():
-    """Search tweets from twitter."""
-    from sklearn.feature_extraction.text import CountVectorizer
-    import pandas as pd
-    import numpy as np
-    import re
-    import xgboost as xgb
-    
+    """Search tweets from twitter."""    
     consumerKey = config.CONSUMER_KEY
     consumerSecret = config.CONSUMER_SECRET
     accessToken = config.ACCESS_TOKEN
@@ -90,19 +182,20 @@ def search_tweets():
 
     api = tweepy.API(auth, wait_on_rate_limit=True)
 
-    #rules = models.Keywords.query.all()
-    #rules = [word.serialize(_id=False)["Keyword"] for word in keywords]
     rule = str(request.form.get("search"))
     rules = ["".join(r for r in rule)]
-    print(f"Rules: {rules}")
-    Count = 10
+    #print(f"Rules: {rules}")
+    Count = 50
     public_tweets = Cursor(api.search, rules, lang="en").items(Count)
     unwanted_words = ['@', 'RT', ':', 'https', 'http']
     symbols = ['@', '#']
     single_chars = re.compile(r'\s+[a-zA-Z]\s+')
     data = []
+    users = []
     for tweet in public_tweets:
         text = tweet.text
+        usr = tweet.user.screen_name
+        users.append(usr)
         textWords = text.split()
         cleaning_tweet = ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|(RT)", " ", text).split())
         cleaning_tweet = single_chars.sub('', cleaning_tweet)
@@ -110,27 +203,63 @@ def search_tweets():
     data = pd.DataFrame(data)
 
     test_data = np.array(data)
-    vectorizer = CountVectorizer()
-    tokens = vectorizer.fit_transform(data.loc[1:, 0])
+    vectorizer = CountVectorizer(analyzer='word', ngram_range=(1,3))
+    vectorizer = pickle.load(open('./saved_models/vectorizer.pkl', 'rb'))
+    results = []
+    ct = 0
     for i, c in enumerate(test_data, 1):
         str_to_vec = vectorizer.transform(c)
         model = xgb.XGBClassifier(nthread=2)
         model.load_model("./saved_models/model.bin")
-
+        usr_ = users[ct]
+        ct += 1
         pred = model.predict_proba(str_to_vec)[:,1]
-        flash(f"Tweet: {str(c[0])}:\n Suicidal_Probability: {np.round(pred[0], 4)}")
-     
-        return jsonify({'Prediction': str(pred[0]),
-                    'Tweet': str(c[0])
-    })#render_template("admin.html", tweets=public_tweets)
+        intent_ = ""
+        if pred[0] <= 0.4:
+            intent_ = "Not Suicidal"
+        elif pred[0] > 0.4 and pred[0] <= 0.7:
+            intent_ = "Neutral"
+        else:
+            intent_ = "Suicidal"
+        result = {
+            'User': '@'+usr_,
+            'Tweet': str(c[0]),
+            'Prediction': intent_
+                 }
+        results.append(result)
+    suicidal_tweet_count = 0
+    nonsuicidal_tweet_count = 0
+    neutral_tweet_count = 0
+    for t in results:
+        if t["Prediction"] == "Suicidal":
+            suicidal_tweet_count += 1
+        elif t["Prediction"] == "Not Suicidal":
+            nonsuicidal_tweet_count += 1
+        else:
+            neutral_tweet_count += 1
+    counts = []
+    counts.append(suicidal_tweet_count)
+    counts.append(nonsuicidal_tweet_count)
+    counts.append(neutral_tweet_count)
+    counts_dict = {"counts": counts}
+    return render_template("index.html",
+                           tweets=results,
+                           counts=counts_dict,
+                           )
 
 @app.route("/app/admin_dashboard/")
 def admin_home():
     """Admin dashboard home."""
     try:
+        results, counts_dict = fetch_tweets()
+
         keywords = models.Keywords.query.all()
         keywords = [word.serialize() for word in keywords]
-        return render_template("admin.html", keywords=keywords)
+        return render_template("admin.html",
+                                keywords=keywords,
+                                tweets=results,
+                                counts=counts_dict
+                                )
     except Exception as e:
         return str(e)
 
