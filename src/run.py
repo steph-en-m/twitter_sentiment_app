@@ -91,6 +91,7 @@ def train_ensemble(model, features, target):
         f1_scores.append(f1)
     print(f'Mean_F1_score_xgboost: {np.mean(f1_scores)}')
     model.save_model('./saved_models/model.bin')
+    pickle.dump(count_vectorizer, open('./saved_models/vectorizer.pkl', 'wb'))
 
 
 def predict_on_test(model, _tokenizer, _type='tree'):
