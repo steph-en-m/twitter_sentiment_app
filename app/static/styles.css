@@ -99,7 +99,7 @@ input:focus {
 .card {
   width: 94%;
   border-bottom: solid rgb(228, 226, 226);
-  height: 100px;
+  height: 200px;
   box-shadow: #fefefe;
   border-radius: 7px;
   margin-left: 3%;

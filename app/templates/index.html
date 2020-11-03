@@ -79,82 +79,30 @@
 		</div>
 		<div id="map">
 			<div class="overflow-auto">
-				<div class="card">
+				{% for tweet in tweets %}
+				<div class="card" style="height: 120px;">
 					<div class="card-body">
-						<em style="color: blue;">@Me</em><br/>
-						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+						<em style="color: blue; font-size: 14px;">{{tweet["User"]}}</em><br/>
+						<em style="font-size: 13px;">{{tweet["Tweet"]}}</em><br/>
+						<p style="font-size: 13px">PREDICTED INTENT: {{tweet["Prediction"]}}</p>
 					</div>
 				  </div>
-				  <div class="card">
-					<div class="card-body">
-						<em style="color: blue;">@Me</em><br/>
-						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
-					</div>
-				  </div>
-				  <div class="card">
-					<div class="card-body">
-						<em style="color: blue;">@Me</em><br/>
-						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
-					</div>
-				  </div>
-				  <div class="card">
-					<div class="card-body">
-						<em style="color: blue;">@Me</em><br/>
-						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
-					</div>
-				  </div>
-				  <div class="card">
-					<div class="card-body">
-						<em style="color: blue;">@Me</em><br/>
-						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
-					</div>
-				  </div>
-				  <div class="card">
-					<div class="card-body">
-						<em style="color: blue;">@Me</em><br/>
-						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
-					</div>
-				  </div>
-				  <div class="card">
-					<div class="card-body">
-						<em style="color: blue;">@Me</em><br/>
-						<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-						<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
-					</div>
-				  </div>
+				  {% endfor %}
 			</div>
 		</div>
 	</div>
 </div>
 <hr style="color: #fff;">
 <div class="overflow-auto">
-	<div class="card">
-		<div class="card-body">
-			<em style="color: blue;">@Me</em><br/>
-			<em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-			<p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
-		</div>
-	  </div>
-	
-	  <div class="card">
-		<div class="card-body">
-			<em style="color: blue;">@some_guy</em><br/>
-			<em style="font-size: 14px;">Where do people get the guts to commit suicide.</em><br/>
-			<p style="font-size: 13px">PREDICTED INTENT: NOT SUICIDAL</p>
-		</div>
-	  </div>
 </div>
 
 <!--Scripts-->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script type="text/javascript">
+	var data_ = {{counts|tojson}};
+</script>
 <script type="text/javascript" src="/static/script.js"></script>
 
 </body>

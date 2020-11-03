@@ -51,12 +51,12 @@
       <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h4">Twitter Suicide Intent Dashboard</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
+          <!--<div class="btn-toolbar mb-2 mb-md-0">
             <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
               <span data-feather="calendar"></span>
               Download Data
             </button>
-          </div>
+          </div>-->
         </div>
 
         <div class="charts">
@@ -76,20 +76,17 @@
             </div>
           </div>
           <div id="map">
-            <div class="card">
-              <div class="card-body">
-                <em style="color: blue;">@Me</em><br/>
-                <em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-                <p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
-              </div>
-              </div>
-              <div class="card">
+            <div class="overflow-auto">
+              {% for tweet in tweets %}
+              <div class="card" style="height: 120px;">
                 <div class="card-body">
-                  <em style="color: blue;">@Me</em><br/>
-                  <em style="font-size: 14px;">Why is life important? I feel its better I die now than keep suffering.</em><br/>
-                  <p style="font-size: 13px">PREDICTED INTENT: SUICIDAL</p>
+                  <em style="color: blue; font-size: 14px;">{{tweet["User"]}}</em><br/>
+                  <em style="font-size: 13px;">{{tweet["Tweet"]}}</em><br/>
+                  <p style="font-size: 13px">PREDICTED INTENT: {{tweet["Prediction"]}}</p>
                 </div>
-                </div>          
+                </div>
+                {% endfor %}
+            </div>       
           </div><br/>
 
         <div id="rules">
@@ -142,8 +139,10 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script type="text/javascript">
+    var data_ = {{counts|tojson}};
+  </script>
   <script type="text/javascript" src="/static/script.js"></script>
-  <!--<script type="text/javascript" src="{{ url_for('static', filename='script.js')}}"></script>-->
 
 </body>
 </html>

@@ -25,7 +25,7 @@ var ctx = document.getElementById("piechart").getContext("2d");
 var data = {
 	labels: ['Suicidal', 'Not Suicidal', 'Neutral'],
 	datasets: [{
-		data: [10, 4, 6],
+		data: data_.counts, //[sl, nsl, ntl],
 		backgroundColor: ["#ff8c82", "#6dc785", "#79bbed"]
 	}]
 }
@@ -53,7 +53,7 @@ var myBarChart = new Chart(bar_chart, {
 		  categoryPercentage: 1.0,
 		  barPercentage: 1.0,
 		  //barThickness: 3,
-		  data: [72, 16, 9],
+		  data: data_.counts, //[72, 16, 9],
 		  backgroundColor: ["#ff8c82", "#6dc785", "#79bbed"]
 
 	  }]
@@ -87,16 +87,16 @@ var line_data = {
 	//labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
 	datasets: [{
 		label: 'Suicidal',
-		data: [12, 19, 3, 17, 6, 3, 7],
+		data: data_.counts[0], //[12, 19, 3, 17, 6, 3, 7],
 		backgroundColor: "#ff8c82"
 	}, {
 		label: 'Non Suicidal',
-		data: [2, 29, 5, 5, 2, 3, 10],
+		data: data_.counts[1], //[2, 29, 5, 5, 2, 3, 10],
 		backgroundColor: "#6dc785"
 	},
 	{
 		label: 'Neutral',
-		data: [2, 19, 5, 5, 2, 3, 10],
+		data: data_.counts[2],//[2, 19, 5, 5, 2, 3, 10],
 		backgroundColor: "#c6e0f7"
 	}]
 	};
@@ -130,7 +130,7 @@ var myLineChart = Chart.Line(l_chart,{
 // Line Chart test
 var l1_chart = document.getElementById("linechart1").getContext("2d");
 var l_data = {
-	labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+	labels: ['0', '1', '2', '3', '4', '5', '6'],
 	datasets: [{
 		label: 'Suicidal',
 		data: [12, 19, 3, 17, 6, 3, 7],
