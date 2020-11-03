@@ -55,15 +55,17 @@ class Tweets(db.Model):
     intent = db.Column(db.String())
     user = db.Column(db.String())
 
-    def __init__(self, tweet, user):
+    def __init__(self, tweet, user, intent):
         self.tweet = tweet
         self.user = user
+        self.intent = intent
 
     def __repr__(self):
         return f"<id {self.id}>"
 
     def serialize(self):
         return {
+            "User": self.user,
             "Tweet": self.tweet,
-            "User": self.user
+            "Prediction": self.intent
         }
