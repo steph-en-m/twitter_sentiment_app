@@ -87,16 +87,16 @@ var line_data = {
 	//labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
 	datasets: [{
 		label: 'Suicidal',
-		data: data_.counts[0], //[12, 19, 3, 17, 6, 3, 7],
+		data: [0, data_.counts[0]], //[12, 19, 3, 17, 6, 3, 7],
 		backgroundColor: "#ff8c82"
 	}, {
 		label: 'Non Suicidal',
-		data: data_.counts[1], //[2, 29, 5, 5, 2, 3, 10],
+		data: [0, data_.counts[1]], //[2, 29, 5, 5, 2, 3, 10],
 		backgroundColor: "#6dc785"
 	},
 	{
 		label: 'Neutral',
-		data: data_.counts[2],//[2, 19, 5, 5, 2, 3, 10],
+		data: [[0],data_.counts[2]],//[2, 19, 5, 5, 2, 3, 10],
 		backgroundColor: "#c6e0f7"
 	}]
 	};
@@ -133,16 +133,16 @@ var l_data = {
 	labels: ['0', '1', '2', '3', '4', '5', '6'],
 	datasets: [{
 		label: 'Suicidal',
-		data: [12, 19, 3, 17, 6, 3, 7],
+		data: [12, 19, 3, 17, 6, 3, 7], //timeseries.suicidal,
 		backgroundColor: "#ff8c82"
 	}, {
 		label: 'Non Suicidal',
-		data: [2, 29, 5, 5, 2, 3, 10],
+		data: [2, 13, 5, 1, 6, 3, 12], //timeseries.non_suicidal,
 		backgroundColor: "#6dc785"
 	},
 	{
 		label: 'Neutral',
-		data: [2, 19, 5, 5, 2, 3, 10],
+		data: [2, 19, 5, , 2, 3, 10], //timeseries.neutral,
 		backgroundColor: "#c6e0f7"
 	}]
 	};
