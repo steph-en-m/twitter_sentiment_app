@@ -20,24 +20,6 @@ db = SQLAlchemy(app)
 
 import models
 
-class MyStreamListener(StreamListener):
-    def on_status(self, status):
-        _tweet = status.text
-        username = status.user.screen_name
-        #_intent = #load model and run predictions
-        db_tweet = models.Tweets(
-            tweet=_tweet,
-            user=username,
-            intent=_intent
-        )
-        db.session.add(db_tweet)
-        db.session.commit()
-        return True
-
-    def on_error(self, status_code):
-        if status_code == 420:
-            return False # disconnect the stream
-
 def fetch_tweets():
     """Fetch tweets from twitter."""
     consumerKey = config.CONSUMER_KEY
@@ -52,9 +34,8 @@ def fetch_tweets():
 
     rules = models.Keywords.query.all()
     rules = [word.serialize(_id=False)["Keyword"] for word in rules]
-    #rules = ["".join(r for r in rule)]
-    print(f"Rules: {rules}")
-    n_tweets = 80
+    
+    n_tweets = 45
     public_tweets = Cursor(api.search, rules[:2], lang="en").items(n_tweets)
     unwanted_words = ['@', 'RT', ':', 'https', 'http']
     symbols = ['@', '#']
@@ -109,49 +90,44 @@ def fetch_tweets():
     suicidal_tweet_count = 0
     nonsuicidal_tweet_count = 0
     neutral_tweet_count = 0
+    # sequences
+    suicidal_seq = [0]
+    non_suicidal_seq = [0]
+    neutral_seq = [0]
     for t in results:
         if t["Prediction"] == "Suicidal":
             suicidal_tweet_count += 1
+            suicidal_seq.append(suicidal_tweet_count)
         elif t["Prediction"] == "Not Suicidal":
             nonsuicidal_tweet_count += 1
+            non_suicidal_seq.append(nonsuicidal_tweet_count)
         else:
             neutral_tweet_count += 1
+            neutral_seq.append(neutral_tweet_count)
     counts = []
     counts.append(suicidal_tweet_count)
     counts.append(nonsuicidal_tweet_count)
     counts.append(neutral_tweet_count)
     counts_dict = {"counts": counts}
+    # tweet sequence
+    counts_seq = {"suidical": suicidal_seq[:7],
+                  "non_suicidal": non_suicidal_seq[:7],
+                  "neutral": neutral_seq[:7]
+                  }
+    print(f'Counts_seq: {counts_seq}')
 
-    return results, counts_dict
-    
-
-def stream_data():
-    """Stream tweets from twitter."""
-    consumerKey = config.CONSUMER_KEY
-    consumerSecret = config.CONSUMER_SECRET
-    accessToken = config.ACCESS_TOKEN
-    accessTokenSecret = config.ACCESS_TOKEN_SECRET
-
-    auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
-    auth.set_access_token(accessToken, accessTokenSecret)
-    api = tweepy.API(auth, wait_on_rate_limit=True)
-
-    _listener = MyStreamListener()
-    my_stream = Stream(auth=api.auth, listener=_listener)
-    rules = ['suicide', 'commit suicide', 'suicidal']
-    my_stream.filter(track=rules)
-
-
+    return results, counts_dict, counts_seq
 
 @app.route("/app/home/")
 def index():
     """Suicide monitor homepage."""
-    results, counts_dict = fetch_tweets()
+    results, counts_dict, counts_seq = fetch_tweets()
     
     #counts_dict = {"counts": counts}
     return render_template("index.html",
                             tweets=results,
-                            counts=counts_dict
+                            counts=counts_dict,
+                            counts_seq=counts_seq
                            )
 
 @app.route("/app/home/login/", methods=["POST"])
@@ -185,7 +161,7 @@ def search_tweets():
     rule = str(request.form.get("search"))
     rules = ["".join(r for r in rule)]
     #print(f"Rules: {rules}")
-    Count = 50
+    Count = 45
     public_tweets = Cursor(api.search, rules, lang="en").items(Count)
     unwanted_words = ['@', 'RT', ':', 'https', 'http']
     symbols = ['@', '#']
@@ -251,14 +227,15 @@ def search_tweets():
 def admin_home():
     """Admin dashboard home."""
     try:
-        results, counts_dict = fetch_tweets()
+        results, counts_dict, counts_seq = fetch_tweets()
 
         keywords = models.Keywords.query.all()
         keywords = [word.serialize() for word in keywords]
         return render_template("admin.html",
                                 keywords=keywords,
                                 tweets=results,
-                                counts=counts_dict
+                                counts=counts_dict,
+                                counts_seq=counts_seq
                                 )
     except Exception as e:
         return str(e)
@@ -306,7 +283,7 @@ def add_keyword():
         flash("Invalid argument length. Keywords must be longer than 5 characters")
     return redirect("/app/admin_dashboard/")
 
-@app.route("/app/admin_dashboard/delete/", methods=["POST"])
+@app.route("/app/admin_dashboard/delete/", methods=["GET", "POST"])
 def delete_keyword():
     """Delete input keyword from the database."""
     key_word = request.form.get("delete-rule")
@@ -317,7 +294,7 @@ def delete_keyword():
         
         keywords = models.Keywords.query.all()
         keywords = [word.serialize() for word in keywords]
-        return render_template("admin.html", keywords=keywords)
+        return redirect("/app/admin_dashboard/")
     except Exception as e:
         return str(e)
 
