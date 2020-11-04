@@ -20,12 +20,18 @@ db = SQLAlchemy(app)
 
 import models
 
+# Tweepy Configurations
+CONSUMER_KEY = "25O70MpmGuKOVn2z4q6Pnqg0g"
+CONSUMER_SECRET = "RhsCbkW1IvqWywqXGeNl7zOzcfCFGBEnpx07Csk9lHLe0OXtdw"
+ACCESS_TOKEN = "940556535222231040-YwDy453At4zZkZBKD1no1wLOSFbnXW4"
+ACCESS_TOKEN_SECRET = "Z7vuvj4jauPJuy51MdHw8lc3HtGLh2df5bCsubjCQDsxB"
+
 def fetch_tweets():
     """Fetch tweets from twitter."""
-    consumerKey = config.CONSUMER_KEY
-    consumerSecret = config.CONSUMER_SECRET
-    accessToken = config.ACCESS_TOKEN
-    accessTokenSecret = config.ACCESS_TOKEN_SECRET
+    consumerKey = CONSUMER_KEY
+    consumerSecret = CONSUMER_SECRET
+    accessToken = ACCESS_TOKEN
+    accessTokenSecret = ACCESS_TOKEN_SECRET
 
     auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
     auth.set_access_token(accessToken, accessTokenSecret)
@@ -149,10 +155,10 @@ def login():
 @app.route("/app/admin_dashboard/search/", methods=["POST"])
 def search_tweets():
     """Search tweets from twitter."""    
-    consumerKey = config.CONSUMER_KEY
-    consumerSecret = config.CONSUMER_SECRET
-    accessToken = config.ACCESS_TOKEN
-    accessTokenSecret = config.ACCESS_TOKEN_SECRET
+    consumerKey = CONSUMER_KEY
+    consumerSecret = CONSUMER_SECRET
+    accessToken = ACCESS_TOKEN
+    accessTokenSecret = ACCESS_TOKEN_SECRET
 
     auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
     auth.set_access_token(accessToken, accessTokenSecret)
@@ -298,7 +304,7 @@ def delete_keyword():
         return redirect("/app/admin_dashboard/")
     except Exception as e:
         return str(e)
-        
+
 
 if __name__ == "__main__":
     app.run()
