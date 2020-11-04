@@ -121,13 +121,13 @@ def fetch_tweets():
                   }
     print(f'Counts_seq: {counts_seq}')
 
-    return results, counts_dict, counts_seq
+    return results, counts_dict
 
 @app.route("/")
 @app.route("/app/home/")
 def index():
     """Suicide monitor homepage."""
-    results, counts_dict, _ = fetch_tweets()
+    results, counts_dict = fetch_tweets()
     
     #counts_dict = {"counts": counts}
     return render_template("index.html",
@@ -232,7 +232,7 @@ def search_tweets():
 def admin_home():
     """Admin dashboard home."""
     try:
-        results, counts_dict, _ = fetch_tweets()
+        results, counts_dict = fetch_tweets()
 
         keywords = models.Keywords.query.all()
         keywords = [word.serialize() for word in keywords]
