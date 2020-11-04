@@ -118,6 +118,7 @@ def fetch_tweets():
 
     return results, counts_dict, counts_seq
 
+@app.route("/")
 @app.route("/app/home/")
 def index():
     """Suicide monitor homepage."""
