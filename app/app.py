@@ -276,7 +276,7 @@ def add_keyword():
 
             keywords = models.Keywords.query.all()
             keywords = [word.serialize() for word in keywords]
-            return render_template("admin.html", keywords=keywords)
+            return redirect('/app/admin_dashboard/')
         except Exception as e:
             return str(e)
     else:
