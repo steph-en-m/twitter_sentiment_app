@@ -10,7 +10,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
 import numpy as np
 import xgboost as xgb
-#import config
+from . import config
 
 app = Flask(__name__)
 
@@ -18,7 +18,7 @@ app.config.from_object(os.environ["APP_SETTINGS"])
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
-import models
+from . import models
 
 # Tweepy Configurations
 CONSUMER_KEY = "25O70MpmGuKOVn2z4q6Pnqg0g"
