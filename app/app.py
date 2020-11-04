@@ -17,7 +17,8 @@ app.config.from_object(os.environ["APP_SETTINGS"])
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
-from . import models
+#from . import models
+import models
 
 # Tweepy Configurations
 CONSUMER_KEY = "25O70MpmGuKOVn2z4q6Pnqg0g"
