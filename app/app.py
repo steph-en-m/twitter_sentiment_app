@@ -60,13 +60,13 @@ def fetch_tweets():
 
     test_data = np.array(data)
     vectorizer = CountVectorizer(analyzer='word', ngram_range=(1,3))
-    vectorizer = pickle.load(open('./saved_models/vectorizer.pkl', 'rb'))
+    vectorizer = pickle.load(open('/app/app/saved_models/vectorizer.pkl', 'rb'))
     results = []
     ct = 0
     for i, c in enumerate(test_data, 1):
         str_to_vec = vectorizer.transform(c)
         model = xgb.XGBClassifier(nthread=2)
-        model.load_model("./saved_models/model.bin")
+        model.load_model("/app/app/saved_models/model.bin")
         usr_ = users[ct]
         ct += 1
         pred = model.predict_proba(str_to_vec)[:,1]
@@ -186,13 +186,13 @@ def search_tweets():
 
     test_data = np.array(data)
     vectorizer = CountVectorizer(analyzer='word', ngram_range=(1,3))
-    vectorizer = pickle.load(open('./saved_models/vectorizer.pkl', 'rb'))
+    vectorizer = pickle.load(open('/app/app/saved_models/vectorizer.pkl', 'rb'))
     results = []
     ct = 0
     for i, c in enumerate(test_data, 1):
         str_to_vec = vectorizer.transform(c)
         model = xgb.XGBClassifier(nthread=2)
-        model.load_model("./saved_models/model.bin")
+        model.load_model("/app/app/saved_models/model.bin")
         usr_ = users[ct]
         ct += 1
         pred = model.predict_proba(str_to_vec)[:,1]
