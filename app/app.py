@@ -127,13 +127,12 @@ def fetch_tweets():
 @app.route("/app/home/")
 def index():
     """Suicide monitor homepage."""
-    results, counts_dict, counts_seq = fetch_tweets()
+    results, counts_dict, _ = fetch_tweets()
     
     #counts_dict = {"counts": counts}
     return render_template("index.html",
                             tweets=results,
-                            counts=counts_dict,
-                            counts_seq=counts_seq
+                            counts=counts_dict
                            )
 
 @app.route("/app/home/login/", methods=["POST"])
@@ -233,15 +232,14 @@ def search_tweets():
 def admin_home():
     """Admin dashboard home."""
     try:
-        results, counts_dict, counts_seq = fetch_tweets()
+        results, counts_dict, _ = fetch_tweets()
 
         keywords = models.Keywords.query.all()
         keywords = [word.serialize() for word in keywords]
         return render_template("admin.html",
                                 keywords=keywords,
                                 tweets=results,
-                                counts=counts_dict,
-                                counts_seq=counts_seq
+                                counts=counts_dict
                                 )
     except Exception as e:
         return str(e)
