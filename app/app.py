@@ -298,3 +298,7 @@ def delete_keyword():
         return redirect("/app/admin_dashboard/")
     except Exception as e:
         return str(e)
+        
+
+if __name__ == "__main__":
+    app.run()
