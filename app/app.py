@@ -10,7 +10,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
 import numpy as np
 import xgboost as xgb
-from . import config
+#from . import app_config
 
 app = Flask(__name__)
 
