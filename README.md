@@ -2,7 +2,7 @@
 
 Suicide Intent Detection Web App. 
 
-[DUE TO CHANGES IN TWITTER API ACCESS & HEROKU, THIS PROJECT IS NOLONGER HOSTED AND SO 
+DUE TO CHANGES IN TWITTER API ACCESS & HEROKU, THIS PROJECT IS NOLONGER HOSTED AND THEREFORE 
 INACCESSIBLE VIA [https://suicide-monitor.herokuapp.com](https://suicide-monitor.herokuapp.com)
 
 #### Home page
