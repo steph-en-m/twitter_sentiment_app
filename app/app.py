@@ -19,10 +19,10 @@ db = SQLAlchemy(app)
 from . import models
 
 # Tweepy Configurations
-CONSUMER_KEY = "25O70MpmGuKOVn2z4q6Pnqg0g"
-CONSUMER_SECRET = "RhsCbkW1IvqWywqXGeNl7zOzcfCFGBEnpx07Csk9lHLe0OXtdw"
-ACCESS_TOKEN = "940556535222231040-YwDy453At4zZkZBKD1no1wLOSFbnXW4"
-ACCESS_TOKEN_SECRET = "Z7vuvj4jauPJuy51MdHw8lc3HtGLh2df5bCsubjCQDsxB"
+CONSUMER_KEY = ""
+CONSUMER_SECRET = ""
+ACCESS_TOKEN = ""
+ACCESS_TOKEN_SECRET = ""
 
 def fetch_tweets():
     """Fetch tweets from twitter."""
